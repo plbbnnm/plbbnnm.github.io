@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aurum &amp; Lapis · ювелирный дом</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f9f6f0;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(215, 185, 140, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 90% 70%, rgba(180, 150, 110, 0.08) 0%, transparent 50%);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.8rem;
+      color: #2a241e;
+    }
+
+    .card {
+      max-width: 1040px;
+      width: 100%;
+      background: rgba(255, 251, 245, 0.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 3.6rem;
+      padding: 2.8rem 3.2rem 2.4rem;
+      box-shadow: 
+        0 30px 70px -20px rgba(60, 40, 20, 0.25),
+        inset 0 1px 2px rgba(255, 245, 230, 0.7);
+      border: 1px solid rgba(255, 240, 220, 0.5);
+      transition: all 0.2s ease;
+    }
+
+    @media (max-width: 640px) {
+      .card {
+        padding: 1.8rem 1.2rem;
+        border-radius: 2.4rem;
+      }
+    }
+
+    /* марка */
+    .brand-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      letter-spacing: 0.06em;
+      color: #1e1610;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .logo span {
+      background: linear-gradient(145deg, #be9a6b, #a77b4a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    .logo i {
+      font-style: normal;
+      font-size: 1.2rem;
+      -webkit-text-fill-color: initial;
+      color: #b48b5a;
+      margin-right: 0.15rem;
+    }
+
+    .tagline {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: #7a6856;
+      background: rgba(200, 175, 145, 0.15);
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      border: 1px solid rgba(200, 175, 145, 0.2);
+      font-weight: 500;
+    }
+
+    /* hero */
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 2.4rem;
+    }
+
+    .hero-text {
+      flex: 2 1 260px;
+    }
+
+    .hero-text h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3rem;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: #1f1711;
+      margin-bottom: 0.3rem;
+    }
+
+    .hero-text h1 em {
+      font-style: italic;
+      font-weight: 400;
+      color: #b28a5c;
+      background: linear-gradient(145deg, #c8a06e, #a57b4b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: #4f4033;
+      opacity: 0.8;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      border-left: 3px solid #dac09a;
+      padding-left: 1.2rem;
+      margin-top: 0.2rem;
+    }
+
+    .hero-badge {
+      background: rgba(220, 195, 160, 0.2);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      padding: 0.5rem 1.8rem;
+      border-radius: 60px;
+      border: 1px solid rgba(220, 195, 160, 0.3);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: #4f3f2e;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(150, 120, 80, 0.05);
+    }
+
+    .hero-badge i {
+      font-style: normal;
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    /* сетка коллекции */
+    .collection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.4rem;
+      margin: 2.2rem 0 2rem;
+    }
+
+    .item-card {
+      background: rgba(255, 248, 238, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 2rem;
+      padding: 1.2rem 0.8rem 1rem;
+      text-align: center;
+      border: 1px solid rgba(235, 215, 185, 0.4);
+      box-shadow: 0 6px 18px rgba(100, 70, 40, 0.04);
+      transition: all 0.2s ease;
+    }
+
+    .item-card:hover {
+      background: rgba(255, 248, 238, 0.8);
+      transform: translateY(-5px);
+      border-color: #dac09a;
+      box-shadow: 0 16px 30px -12px rgba(120, 80, 40, 0.12);
+    }
+
+    .item-icon {
+      font-size: 2.6rem;
+      line-height: 1;
+      margin-bottom: 0.2rem;
+      filter: drop-shadow(0 2px 6px rgba(180, 140, 90, 0.1));
+    }
+
+    .item-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+      color: #1f1711;
+    }
+
+    .item-desc {
+      font-size: 0.7rem;
+      color: #6f5d4b;
+      opacity: 0.8;
+      margin-top: 0.1rem;
+      font-weight: 400;
+    }
+
+    .item-price {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      color: #b28a5c;
+      font-size: 1rem;
+      margin-top: 0.2rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* детали */
+    .details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.8rem 2.5rem;
+      margin-top: 2rem;
+      padding-top: 1.8rem;
+      border-top: 1px solid rgba(190, 165, 135, 0.2);
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 0.85rem;
+      color: #3b3128;
+    }
+
+    .feature .icon {
+      font-size: 1.4rem;
+      opacity: 0.7;
+    }
+
+    .feature strong {
+      font-weight: 600;
+      color: #1e1610;
+      margin-right: 0.2rem;
+    }
+
+    .feature small {
+      font-weight: 300;
+      opacity: 0.7;
+    }
+
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .pill {
+      background: rgba(190, 165, 135, 0.12);
+      border-radius: 40px;
+      padding: 0.2rem 1rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      color: #4f3f2e;
+      border: 1px solid rgba(190, 165, 135, 0.1);
+    }
+
+    .pill.gold {
+      background: rgba(190, 155, 100, 0.15);
+      border-color: rgba(190, 155, 100, 0.2);
+      color: #7a5d38;
+    }
+
+    .footer-note {
+      margin-top: 1.8rem;
+      display: flex;
+      justify-content: flex-end;
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+      color: #8a7a68;
+      opacity: 0.6;
+      border-top: 1px solid rgba(190, 165, 135, 0.08);
+      padding-top: 1.2rem;
+    }
+
+    @media (max-width: 500px) {
+      .hero-text h1 {
+        font-size: 2.4rem;
+      }
+      .collection-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+      }
+      .details {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.8rem;
+      }
+      .brand-line {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main">
+    <!-- шапка бренда -->
+    <div class="brand-line">
+      <div class="logo">
+        <i>✦</i> <span>Aurum</span> &amp; <span>Lapis</span>
+      </div>
+      <div class="tagline">ювелирный дом · с 1926</div>
+    </div>
+
+    <!-- герой -->
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Сияние <em>и</em> камень</h1>
+        <div class="hero-sub">Коллекция «Осенний сад» — дань природной гармонии</div>
+      </div>
+      <div class="hero-badge">
+        <i>✦</i> осень–зима 2026
+      </div>
+    </div>
+
+    <!-- коллекция -->
+    <div class="collection-grid">
+      <div class="item-card">
+        <div class="item-icon">💎</div>
+        <div class="item-name">Сапфир</div>
+        <div class="item-desc">огранка «изумруд»</div>
+        <div class="item-price">₽ 84 000</div>
+      </div>
+      <div class="item-card">
+        <div class="item-icon">✨</div>
+        <div class="item-name">Рубин</div>
+        <div class="item-desc">кабошон, 3.2 карат</div>
+        <div class="item-price">₽ 127 000</div>
+      </div>
+      <div class="item-card">
+        <div class="item-icon">🌙</div>
+        <div class="item-name">Лунный камень</div>
+        <div class="item-desc">овал, 6 мм</div>
+        <div class="item-price">₽ 42 000</div>
+      </div>
+      <div class="item-card">
+        <div class="item-icon">🌿</div>
+        <div class="item-name">Изумруд</div>
+        <div class="item-desc">колумбийский, чистота VVS</div>
+        <div class="item-price">₽ 210 000</div>
+      </div>
+    </div>
+
+    <!-- детали и метки -->
+    <div class="details">
+      <div class="feature">
+        <span class="icon">⚜️</span>
+        <span><strong>585 проба</strong> <small>золото / платина</small></span>
+      </div>
+      <div class="feature">
+        <span class="icon">🔹</span>
+        <span><strong>сертификат</strong> <small>GIA &amp; IGI</small></span>
+      </div>
+      <div class="pill-group">
+        <span class="pill gold">ручная работа</span>
+        <span class="pill">индивидуальный заказ</span>
+        <span class="pill gold">пожизненная гарантия</span>
+      </div>
+    </div>
+
+    <!-- футер -->
+    <div class="footer-note">
+      <span>✦ авторская ювелирная мастерская · Санкт-Петербург</span>
+    </div>
+  </div>
+</body>
+</html>
