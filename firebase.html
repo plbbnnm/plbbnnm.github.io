@@ -14,6 +14,13 @@
   </style>
 </head>
 <body>
+<!-- Сначала подключите CDN-скрипты Firebase App и Auth (v8 compat) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+
+<!-- Кнопка для входа -->
+<button onclick="signInWithGitHub()">Войти через GitHub</button>
 
   <!-- ФОРМА -->
   <form id="student-form">
@@ -102,6 +109,35 @@
     console.error("Ошибка чтения:", error);
     displayElement.textContent = "Ошибка загрузки данных.";
   });
+
+    // Инициализируем Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  // Создаем провайдер авторизации GitHub
+  const provider = new firebase.auth.GithubAuthProvider();
+
+  // Дополнительно можно запросить доступы (например, к email)
+  provider.addScope('user:email');
+
+  // Функция для запуска всплывающего окна авторизации
+  function signInWithGitHub() {
+    firebase.auth().signInWithPopup(provider)
+      .then((result) => {
+        // Успешный вход
+        const user = result.user;
+        const credential = result.credential;
+        // Токен доступа GitHub (если нужен для работы с GitHub API)
+        const token = credential.accessToken;
+
+        console.log("Пользователь вошел:", user.displayName);
+        alert(`Привет, ${user.displayName || user.email}!`);
+      })
+      .catch((error) => {
+        // Обработка ошибок
+        console.error("Ошибка авторизации:", error.message);
+        alert("Не удалось войти: " + error.message);
+      });
+  }
 </script>
 
 </body>
