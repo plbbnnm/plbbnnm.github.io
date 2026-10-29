@@ -11,13 +11,20 @@
     button { cursor: pointer; }
     .student { padding: 8px 0; }
     hr { border: none; border-top: 1px solid #ddd; }
+    
+    /* Стили для блока авторизации */
+    .auth-block { margin-bottom: 20px; padding: 15px; background: #f4f4f4; border-radius: 8px; }
+    #greeting { margin-top: 10px; font-weight: bold; color: #2e7d32; }
   </style>
 </head>
 <body>
 
-<!-- Кнопка для входа -->
-<button onclick="signInWithGitHub()">Войти через GitHub</button>
-<div id="greeting" style="margin-top: 10px; font-weight: bold; color: green;"></div>
+  <!-- БЛОК АВТОРИЗАЦИИ -->
+  <div class="auth-block">
+    <button id="login-btn" onclick="signInWithGitHub()">Войти через GitHub</button>
+    <button id="logout-btn" onclick="logOut()" style="display: none;">Выйти</button>
+    <div id="greeting"></div>
+  </div>
 
   <!-- ФОРМА -->
   <form id="student-form">
@@ -36,14 +43,15 @@
   <!-- ОБЛАСТЬ ОТОБРАЖЕНИЯ -->
   <div id="student-display">Загрузка...</div>
 
-  <!-- 1. Подключаем Compat-скрипты (обычные, не module) -->
+  <!-- 1. ПОДКЛЮЧАЕМ FIREBASE (COMPAT ВЕРСИЯ ДЛЯ ОБЫЧНЫХ СКРИПТОВ) -->
   <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics-compat.js"></script>
 
-  <!-- 2. Обычный скрипт (без type="module") -->
+  <!-- 2. ЛОГИКА ПРИЛОЖЕНИЯ -->
   <script>
+    // Конфигурация Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyD3MQWSjZ6ie78R4C50led6lszWik7fUCo",
       authDomain: "college-de6c8.firebaseapp.com",
@@ -59,10 +67,12 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     const auth = firebase.auth();
-
     const studentsRef = database.ref('students');
 
-    // --- ОБРАБОТКА ФОРМЫ ---
+    // ==========================================
+    // БАЗА ДАННЫХ (Добавление и отображение)
+    // ==========================================
+
     const form = document.getElementById('student-form');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -77,15 +87,14 @@
       newStudentRef.set({ name, major, gradYear })
         .then(() => {
           form.reset();
-          console.log("Insert success!");
+          console.log("Студент добавлен!");
         })
         .catch((error) => {
-          console.error("Database write error:", error);
+          console.error("Ошибка записи:", error);
           alert("Не удалось сохранить: " + error.message);
         });
     });
 
-    // --- ОТОБРАЖЕНИЕ ВСЕХ В РЕАЛЬНОМ ВРЕМЕНИ ---
     const displayElement = document.getElementById('student-display');
 
     studentsRef.on('value', (snapshot) => {
@@ -110,40 +119,61 @@
       displayElement.textContent = "Ошибка загрузки данных.";
     });
 
-    // --- АВТОРИЗАЦИЯ ЧЕРЕЗ GITHUB ---
+    // ==========================================
+    // АВТОРИЗАЦИЯ (Вход, Выход, Отслеживание)
+    // ==========================================
+
     const provider = new firebase.auth.GithubAuthProvider();
     provider.addScope('user:email');
 
-    // Теперь это обычная функция, и onclick её видит
+    // Вход
     function signInWithGitHub() {
-  auth.signInWithPopup(provider)
-    .then((result) => {
-      const user = result.user;
-      console.log("Пользователь вошел:", user.displayName);
-      
-      // --- ИЗМЕНЕНИЯ ЗДЕСЬ ---
-      // Берем имя из GitHub. Если его нет, берем email или часть до @
-      let name = user.displayName;
-      
-      // Если GitHub не вернул имя, пробуем взять email до собачки
-      if (!name && user.email) {
-        name = user.email.split('@')[0];
-      }
-      if (!name) {
-         name = "гость"; // на всякий случай
-      }
+      auth.signInWithPopup(provider)
+        .then((result) => {
+          console.log("Успешный вход:", result.user.displayName);
+          // Всю работу по смене кнопок сделает auth.onAuthStateChanged
+        })
+        .catch((error) => {
+          console.error("Ошибка авторизации:", error.message);
+          alert("Не удалось войти: " + error.message);
+        });
+    }
 
-      // Выводим текст в наш новый div вместо alert
-      document.getElementById('greeting').textContent = `Привет, ${name}!`;
-      // ----------------------
-      
-    })
-    .catch((error) => {
-      console.error("Ошибка авторизации:", error.message);
-      // Вместо alert при ошибке тоже можно вывести текст, но оставим alert для ошибок
-      alert("Не удалось войти: " + error.message); 
+    // Выход
+    function logOut() {
+      auth.signOut()
+        .then(() => {
+          console.log("Пользователь вышел");
+        })
+        .catch((error) => {
+          console.error("Ошибка выхода:", error.message);
+        });
+    }
+
+    // Отслеживание состояния (срабатывает при загрузке страницы, входе и выходе)
+    auth.onAuthStateChanged((user) => {
+      const loginBtn = document.getElementById('login-btn');
+      const logoutBtn = document.getElementById('logout-btn');
+      const greeting = document.getElementById('greeting');
+
+      if (user) {
+        // Пользователь вошел
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+        
+        // Формируем имя
+        let name = user.displayName;
+        if (!name && user.email) name = user.email.split('@')[0];
+        if (!name) name = "гость";
+        
+        greeting.textContent = `Привет, ${name}!`;
+      } else {
+        // Пользователь не вошел
+        loginBtn.style.display = 'inline-block';
+        logoutBtn.style.display = 'none';
+        greeting.textContent = "";
+      }
     });
-}
   </script>
 
 </body>
