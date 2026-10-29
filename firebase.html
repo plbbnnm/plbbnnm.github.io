@@ -17,6 +17,7 @@
 
 <!-- Кнопка для входа -->
 <button onclick="signInWithGitHub()">Войти через GitHub</button>
+<div id="greeting" style="margin-top: 10px; font-weight: bold; color: green;"></div>
 
   <!-- ФОРМА -->
   <form id="student-form">
@@ -115,17 +116,34 @@
 
     // Теперь это обычная функция, и onclick её видит
     function signInWithGitHub() {
-      auth.signInWithPopup(provider)
-        .then((result) => {
-          const user = result.user;
-          console.log("Пользователь вошел:", user.displayName);
-          alert(`Привет, ${user.displayName || user.email}!`);
-        })
-        .catch((error) => {
-          console.error("Ошибка авторизации:", error.message);
-          alert("Не удалось войти: " + error.message);
-        });
-    }
+  auth.signInWithPopup(provider)
+    .then((result) => {
+      const user = result.user;
+      console.log("Пользователь вошел:", user.displayName);
+      
+      // --- ИЗМЕНЕНИЯ ЗДЕСЬ ---
+      // Берем имя из GitHub. Если его нет, берем email или часть до @
+      let name = user.displayName;
+      
+      // Если GitHub не вернул имя, пробуем взять email до собачки
+      if (!name && user.email) {
+        name = user.email.split('@')[0];
+      }
+      if (!name) {
+         name = "гость"; // на всякий случай
+      }
+
+      // Выводим текст в наш новый div вместо alert
+      document.getElementById('greeting').textContent = `Привет, ${name}!`;
+      // ----------------------
+      
+    })
+    .catch((error) => {
+      console.error("Ошибка авторизации:", error.message);
+      // Вместо alert при ошибке тоже можно вывести текст, но оставим alert для ошибок
+      alert("Не удалось войти: " + error.message); 
+    });
+}
   </script>
 
 </body>
