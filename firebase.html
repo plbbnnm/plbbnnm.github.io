@@ -14,13 +14,10 @@
   </style>
 </head>
 <body>
-<!-- Сначала подключите CDN-скрипты Firebase App и Auth (v8 compat) -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
 
 <!-- Кнопка для входа -->
-<button onclick="signInWithGitHub()">Войти через GitHub</button>
+<button id="myButton">Войти через GitHub</button>
 
   <!-- ФОРМА -->
   <form id="student-form">
@@ -120,7 +117,7 @@
   provider.addScope('user:email');
 
   // Функция для запуска всплывающего окна авторизации
-  function signInWithGitHub() {
+  window.signInWithGitHub  = function signInWithGitHub() {
     firebase.auth().signInWithPopup(provider)
       .then((result) => {
         // Успешный вход
@@ -138,6 +135,10 @@
         alert("Не удалось войти: " + error.message);
       });
   }
+
+  myButton.onclick = signInWithGitHub;
+
+
 </script>
 
 </body>
